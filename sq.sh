@@ -9,7 +9,7 @@ if [ "$OS_TYPE" = "debian" ] || [ "$OS_TYPE" = "ubuntu" ]; then
     sudo apt-get update -y
 elif [ "$OS_TYPE" = "centos" ] || [ "$OS_TYPE" = "fedora" ] || [ "$OS_TYPE" = "rhel" ]; then
     INSTALL_CMD="sudo yum"
-    sudo apt-get update -y
+    sudo dnf update -y
 else
     echo "不支持的操作系统类型。"
     exit 1
