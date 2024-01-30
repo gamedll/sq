@@ -6,11 +6,20 @@ OS_TYPE=$(awk -F= '/^ID=/ { print $2 }' /etc/os-release)
 INSTALL_CMD=""
 if [ "$OS_TYPE" = "debian" ] || [ "$OS_TYPE" = "ubuntu" ]; then
     INSTALL_CMD="sudo apt-get"
+    sudo apt-get update -y
 elif [ "$OS_TYPE" = "centos" ] || [ "$OS_TYPE" = "fedora" ] || [ "$OS_TYPE" = "rhel" ]; then
     INSTALL_CMD="sudo dnf"
+    sudo dnf update -y
 else
-    echo "不支持的操作系统类型。"
-    exit 1
+    # 尝试检查 /etc/centos-release 文件来确定是否是 CentOS
+    if [ -f /etc/centos-release ]; then
+        OS_TYPE="centos"
+        INSTALL_CMD="sudo dnf"
+        sudo dnf update -y
+    else
+        echo "不支持的操作系统类型。"
+        exit 1
+    fi
 fi
 
 # 生成随机用户名和密码的函数
