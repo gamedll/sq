@@ -6,10 +6,8 @@ OS_TYPE=$(awk -F= '/^ID=/ { print $2 }' /etc/os-release)
 INSTALL_CMD=""
 if [ "$OS_TYPE" = "debian" ] || [ "$OS_TYPE" = "ubuntu" ]; then
     INSTALL_CMD="sudo apt-get"
-    sudo apt-get update -y
 elif [ "$OS_TYPE" = "centos" ] || [ "$OS_TYPE" = "fedora" ] || [ "$OS_TYPE" = "rhel" ]; then
-    INSTALL_CMD="sudo yum"
-    sudo dnf update -y
+    INSTALL_CMD="sudo dnf"
 else
     echo "不支持的操作系统类型。"
     exit 1
@@ -47,7 +45,7 @@ if [ "$ACTION" == "1" ]; then
     fi
 
     # 更新系统包
-    ${INSTALL_CMD} update
+    ${INSTALL_CMD} update -y
 
     # 检查并安装 Squid
     if ! command -v squid >/dev/null 2>&1; then
