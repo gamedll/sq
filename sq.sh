@@ -1,5 +1,7 @@
 #!/bin/bash
-
+# Script to install Squid Proxy Server
+# Author: 4298059@qq.com
+# Date: 2024-01-31
 # 检测操作系统类型
 OS_TYPE=$(awk -F= '/^ID=/ { print $2 }' /etc/os-release)
 
