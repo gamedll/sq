@@ -77,7 +77,7 @@ if [ "$ACTION" == "1" ]; then
 
     # 创建新的 Squid 配置文件
     cat <<EOF | sudo tee /etc/squid/squid.conf
-http_port 3128 ipv4
+http_port 0.0.0.0:3128
 dns_v4_first on
 auth_param basic program /usr/lib/squid/basic_ncsa_auth /etc/squid/passwd
 auth_param basic children 5
