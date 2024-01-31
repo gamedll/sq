@@ -55,7 +55,7 @@ if [ "$ACTION" == "1" ]; then
 
     # 检查并安装 Apache 工具（用于生成密码文件）
     if ! command -v htpasswd >/dev/null 2>&1; then
-        sudo ${INSTALL_CMD} install -y httpd-tools
+        sudo ${INSTALL_CMD} install -y apache2-utils
     fi
 
     # 检查并安装 fail2ban
