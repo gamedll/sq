@@ -102,22 +102,22 @@ EOF
     # 重启 Squid 服务以应用配置
     sudo systemctl restart squid
 
-   # 配置 fail2ban 以监控 Squid 的认证失败
+    # 配置 fail2ban 以监控 Squid 的认证失败
     cat <<EOF | sudo tee /etc/fail2ban/jail.local
-    [squid]
-    enabled = true
-    filter = squid
-    action = iptables[name=Squid, port=3128, protocol=tcp]
-    logpath = /var/log/squid/access.log
-    maxretry = 10
-    bantime = 3600
+[squid]
+enabled = true
+filter = squid
+action = iptables[name=Squid, port=3128, protocol=tcp]
+logpath = /var/log/squid/access.log
+maxretry = 10
+bantime = 3600
 EOF
     
     # 创建 fail2ban 的 Squid 过滤器
     cat <<EOF | sudo tee /etc/fail2ban/filter.d/squid.conf
-    [Definition]
-    failregex = ^.* \[squid.*\] .* 401 Unauthorized.*
-    ignoreregex =
+[Definition]
+failregex = ^.* \[squid.*\] .* 401 Unauthorized.*
+ignoreregex =
 EOF
 
     # 重启 fail2ban 服务以应用配置
