@@ -111,14 +111,14 @@ EOF
     logpath = /var/log/squid/access.log
     maxretry = 10
     bantime = 3600
-    EOF
+EOF
     
     # 创建 fail2ban 的 Squid 过滤器
     cat <<EOF | sudo tee /etc/fail2ban/filter.d/squid.conf
     [Definition]
     failregex = ^.* \[squid.*\] .* 401 Unauthorized.*
     ignoreregex =
-    EOF
+EOF
 
     # 重启 fail2ban 服务以应用配置
     sudo systemctl restart fail2ban
