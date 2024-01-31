@@ -6,16 +6,13 @@ OS_TYPE=$(awk -F= '/^ID=/ { print $2 }' /etc/os-release)
 INSTALL_CMD=""
 if [ "$OS_TYPE" = "debian" ] || [ "$OS_TYPE" = "ubuntu" ]; then
     INSTALL_CMD="sudo apt-get"
-    sudo apt-get update -y
 elif [ "$OS_TYPE" = "centos" ] || [ "$OS_TYPE" = "fedora" ] || [ "$OS_TYPE" = "rhel" ]; then
     INSTALL_CMD="sudo dnf"
-    sudo dnf update -y
 else
     # 尝试检查 /etc/centos-release 文件来确定是否是 CentOS
     if [ -f /etc/centos-release ]; then
         OS_TYPE="centos"
         INSTALL_CMD="sudo dnf"
-        sudo dnf update -y
     else
         echo "不支持的操作系统类型。"
         exit 1
@@ -49,21 +46,21 @@ if [ "$ACTION" == "1" ]; then
     echo
 
     # 更新系统包
-    sudo apt-get update
+    sudo ${INSTALL_CMD} update -y
 
     # 检查并安装 Squid
     if ! command -v squid >/dev/null 2>&1; then
-        sudo apt-get install -y squid
+        sudo ${INSTALL_CMD} install -y squid
     fi
 
     # 检查并安装 Apache 工具（用于生成密码文件）
     if ! command -v htpasswd >/dev/null 2>&1; then
-        sudo apt-get install -y apache2-utils
+        sudo ${INSTALL_CMD} install -y httpd-tools
     fi
 
     # 检查并安装 fail2ban
     if ! command -v fail2ban-server >/dev/null 2>&1; then
-        sudo apt-get install -y fail2ban
+        sudo ${INSTALL_CMD} install -y fail2ban
     fi
 
     # 备份原始 Squid 配置文件
