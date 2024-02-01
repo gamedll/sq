@@ -84,7 +84,6 @@ acl localhost src 127.0.0.1/255.255.255.255  #允午本机IP
 acl to_localhost dst 127.0.0.1                 #允午目的地址为本机IP
 acl Safe_ports port 80                # 允许安全更新的端口为80
 acl CONNECT method CONNECT        #请求方法以CONNECT
-dns_v4_first on
 auth_param basic program /usr/lib/squid/basic_ncsa_auth /etc/squid/passwd
 auth_param basic children 5
 auth_param basic realm Squid proxy-caching web server
