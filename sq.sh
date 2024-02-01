@@ -85,6 +85,8 @@ auth_param basic realm Squid proxy-caching web server
 auth_param basic credentialsttl 2 hours
 auth_param basic casesensitive off
 acl authenticated proxy_auth REQUIRED
+http_access allow all
+http_reply_access allow all   
 http_access allow authenticated
 
 # 高匿名设置
