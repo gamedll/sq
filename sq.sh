@@ -78,6 +78,12 @@ if [ "$ACTION" == "1" ]; then
     # 创建新的 Squid 配置文件
     cat <<EOF | sudo tee /etc/squid/squid.conf
 http_port 0.0.0.0:3128
+acl all src 0.0.0.0/0.0.0.0                 #允许所有IP访问
+acl manager proto http                 #manager url协议为http
+acl localhost src 127.0.0.1/255.255.255.255  #允午本机IP
+acl to_localhost dst 127.0.0.1                 #允午目的地址为本机IP
+acl Safe_ports port 80                # 允许安全更新的端口为80
+acl CONNECT method CONNECT        #请求方法以CONNECT
 dns_v4_first on
 auth_param basic program /usr/lib/squid/basic_ncsa_auth /etc/squid/passwd
 auth_param basic children 5
@@ -88,6 +94,36 @@ acl authenticated proxy_auth REQUIRED
 http_access allow all
 http_reply_access allow all   
 http_access allow authenticated
+acl OverConnLimit maxconn 20        #限制每个IP最大允许16个连接，防止攻击
+http_access deny OverConnLimit
+#禁止从邻居服务器缓冲内发送和接收ICP请求.
+icp_access deny all   
+#允许直接更新请求
+miss_access allow all               
+ident_lookup_access deny all                                #禁止lookup检查DNS
+http_port 8080 transparent                                #指定Squid监听浏览器客户请求的端口号。
+max_open_disk_fds 0                                 #允许最大打开文件数量,0 无限制
+minimum_object_size 1 KB                         #允午最小文件请求体大小
+maximum_object_size 20 MB                 #允午最大文件请求体大小
+
+cache_swap_low 90                            #最小允许使用swap 90%
+cache_swap_high 95                            #最多允许使用swap 95%
+
+ipcache_size 2048                                # IP 地址高速缓存大小 2M
+ipcache_low 90                                #最小允许ipcache使用swap 90%
+ipcache_high 95                                  #最大允许ipcache使用swap 90%
+
+request_entities off                                        #禁止非http的标分准请求，防止攻击
+header_access header allow all                        #允许所有的http报头
+relaxed_header_parser on                                #不严格分析http报头.
+client_lifetime 120 minute                                #最大客户连接时间 120分钟
+
+acl baidu req_header User-Agent Baiduspider
+http_access deny baidu
+
+#限制同一IP客户端的最大连接数
+acl OverConnLimit maxconn 128
+http_access deny OverConnLimit
 
 # 高匿名设置
 forwarded_for delete
